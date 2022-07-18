@@ -25,7 +25,7 @@
 
 static inline mtmn_config_t app_mtmn_config()
 {
-  mtmn_config_t mtmn_config = {0};
+  mtmn_config.t mtmn_config = {0};
   mtmn_config.type = FAST;
   mtmn_config.min_face = 80;
   mtmn_config.pyramid = 0.707;
