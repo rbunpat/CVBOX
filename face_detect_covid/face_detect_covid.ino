@@ -2,7 +2,7 @@
 #include "esp_camera.h"
 #include "fd_forward.h"
 
-#define LINE_TOKEN  "NJpbe5ygSRXDGbi5hWbhfEgJbbY4Tj47kjKJ7bqiUmu"
+#define LINE_TOKEN  "YOUR TOKEN HERE"
 #define ssid        "ST_SCHOOL"
 #define password    "st12345678"
 
