@@ -3,8 +3,8 @@
 #include "fd_forward.h"
 
 #define LINE_TOKEN  "YOUR TOKEN HERE"
-#define ssid        "ST_SCHOOL"
-#define password    "st12345678"
+#define ssid        "YOUR SSID HERE"
+#define password    "YOUR WIFI PASSWORD HERE"
 
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
