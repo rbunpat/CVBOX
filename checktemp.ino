@@ -1,7 +1,7 @@
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
-#include <MLX90614.h>
-#include <SPI.h>
+#include "Wire.h"
+#include "LiquidCrystal_I2C.h"
+#include "MLX90614.h"
+#include "SPI.h"
 
 int trigpin = 13;
 int echopin = 12;
