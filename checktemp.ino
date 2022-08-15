@@ -10,6 +10,8 @@ int motorIN1 = 2;
 int motorIN2 = 3;
 int motorPWM = 6;
 
+int allowPin = 5;
+
 unsigned long currentTime = millis();
 unsigned long oldTime = currentTime;
 
@@ -28,6 +30,7 @@ void setup()
     pinMode(motorIN1, OUTPUT);
     pinMode(motorIN2, OUTPUT);
     pinMode(motorPWM, OUTPUT);
+    pinMode(allowPin, OUTPUT);
     lcd.begin(16, 2);
     lcd.clear();
     lcd.noBacklight();
@@ -109,6 +112,13 @@ void dispenseALC(int mtrspeed, int dsplen)
     delay(dsplen);
     digitalWrite(motorIN1, LOW);
     digitalWrite(motorIN2, LOW); //turn dat motor off
+}
+
+void allowATK(int allowlen)
+{
+    digitalWrite(allowpin, HIGH);
+    delay(allowlen);
+    digitalWrite(allowPin, LOW);
 }
 
 long microsecondsToCentimeters(long microseconds)
