@@ -1,23 +1,31 @@
 #include <Servo.h>
 Servo atkServo;
 
-int defaultPosition = 0;
+int defaultServoPos = 0;
+int buttonState = 0;
+int allowStatus = 0;
+
 const int allowPin = 5;
+const int buttonPin = 4;
 
 void setup()
 {
-    pinMode(allowPin, INPUT)
+    pinMode(buttonPin, INPUT);
+    pinMode(allowPin, INPUT);
     atkServo.attach(9);
 }
 
 void loop()
 {
-    int allowStatus;
     allowStatus = digitalRead(allowPin);
-    if (allowStatus == 1)
+    buttonState = digitalRead(buttonPin);
+    while (allowStatus == HIGH)
     {
-        atkServo.write(90);
-        delay(500);
-        atkServo.write(0);
+        if (buttonState == HIGH)
+        {
+            atkServo.write(90);
+            delay(500);
+            atkServo.write(0);
+        }
     }
 }
