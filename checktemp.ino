@@ -3,14 +3,12 @@
 #include "MLX90614.h"
 #include "SPI.h"
 
-int trigpin = 13;
-int echopin = 12;
+int trigpin = 6;
+int echopin = 5;
 
-int motorIN1 = 2;
-int motorIN2 = 3;
-int motorPWM = 6;
+int relaypin = 4;
 
-int allowPin = 5;
+int scanstatus = 0;
 
 unsigned long currentTime = millis();
 unsigned long oldTime = currentTime;
@@ -21,16 +19,9 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void setup()
 {
-    Serial.begin(115200);
-    while (!Serial);
     Wire.begin();
     mlx90614.init();
-    Serial.print("Address = 0x");
-    Serial.println(mlx90614.readSlaveAddress(), HEX);
-    pinMode(motorIN1, OUTPUT);
-    pinMode(motorIN2, OUTPUT);
-    pinMode(motorPWM, OUTPUT);
-    pinMode(allowPin, OUTPUT);
+    pinMode(relaypin, OUTPUT);
     lcd.begin(16, 2);
     lcd.clear();
     lcd.noBacklight();
@@ -54,7 +45,7 @@ void loop()
         pinMode(echopin, INPUT);
         duration = pulseIn(echopin, HIGH);
         objDist = microsecondsToCentimeters(duration);
-        if (objDist > 10 and objDist < 15) //set detection distance here (cm)
+        if (objDist > 0 and objDist < 10) //set detection distance here (cm)
         {
             idkwhattocallthisfunction();
         }
@@ -64,14 +55,13 @@ void loop()
 
 void idkwhattocallthisfunction()
 {
-    float tempAMB, tempOBJ;
-    tempAMB = mlx90614.readAmbientTemperature();
+    float tempOBJ;
     tempOBJ = mlx90614.readObjectTemperature();
     if (tempOBJ > 29 && tempOBJ < 37.5) //set normal temp range here (c)
     {
         lcd.setCursor(5, 1);
         lcd.print(tempOBJ);
-        dispenseALC(200, 500); //(motor speed value = 0-255, dispense time value = > 0 in ms)
+        dispenseALC(250); //(dispense time value = > 0 in ms)
         delay(500);
         lcd.clear();
         lcd.setCursor(0, 0);
@@ -79,13 +69,13 @@ void idkwhattocallthisfunction()
     }
     else if (tempOBJ > 37.5) //set first scan high temp threshold here (c)
     {
-        float scndscan
+        float scndscan;
         scndscan = mlx90614.readObjectTemperature();
         if (scndscan > 29 && scndscan < 37.5) //set second scan temp range here (c)
         {
             lcd.setCursor(5, 1);
             lcd.print(scndscan);
-            dispenseALC(200, 500); //(motor speed value = 0-255, dispense time value = > 0 in ms)
+            dispenseALC(250); //(dispense time value = > 0 in ms)
             delay(500);
             lcd.clear();
             lcd.setCursor(0, 0);
@@ -93,9 +83,12 @@ void idkwhattocallthisfunction()
         }
         else
         {
-            lcd.setCursor(0, 1);
+            lcd.clear();
+            lcd.setCursor(0, 0);
             lcd.print("High Temperature");
-            dispenseALC(200, 500); //(motor speed value = 0-255, dispense time value = > 0 in ms)
+            lcd.setCursor(5, 1);
+            lcd.print(scndscan);
+            dispenseALC(250); //(dispense time value = > 0 in ms)
             delay(500);
             lcd.clear();
             lcd.setCursor(0, 0);
@@ -104,21 +97,11 @@ void idkwhattocallthisfunction()
     }
 }
 
-void dispenseALC(int mtrspeed, int dsplen)
+void dispenseALC(int dsplen)
 {
-    digitalWrite(motorIN1, HIGH);
-    digitalWrite(motorIN2, LOW); //turn the motor on and set direction to forward
-    analogWrite(motorPWM, mtrspeed);
-    delay(dsplen);
-    digitalWrite(motorIN1, LOW);
-    digitalWrite(motorIN2, LOW); //turn dat motor off
-}
-
-void allowATK(int allowlen)
-{
-    digitalWrite(allowpin, HIGH);
-    delay(allowlen);
-    digitalWrite(allowPin, LOW);
+  digitalWrite(relaypin, LOW);
+  delay(dsplen);
+  digitalWrite(relaypin, HIGH);  
 }
 
 long microsecondsToCentimeters(long microseconds)
